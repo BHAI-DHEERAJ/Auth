@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auth System :)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0f0f13;
+      color: #e4e4e7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .container { text-align: center; padding: 2rem; }
+    h1 { font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem; background: linear-gradient(135deg, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    p { color: #a1a1aa; font-size: 1.1rem; margin-bottom: 2rem; }
+    .actions { display: flex; gap: 1rem; justify-content: center; }
+    .btn {
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: #818cf8; color: #fff; }
+    .btn-primary:hover { background: #6d78f0; transform: translateY(-1px); }
+    .btn-secondary { background: #27272a; color: #e4e4e7; border: 1px solid #3f3f46; }
+    .btn-secondary:hover { background: #3f3f46; }
+    .status {
+      margin-top: 2rem;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      background: #18181b;
+      border: 1px solid #27272a;
+      display: none;
+    }
+    .status.active { display: block; }
+    .status a { color: #818cf8; text-decoration: none; }
+    .status a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Auth System</h1>
+    <p>1st Ever Project hehe</p>
+    <div class="actions">
+      <a href="/login.html" class="btn btn-primary">Sign In</a>
+      <a href="/register.html" class="btn btn-secondary">Create Account</a>
+    </div>
+    <div class="status" id="status">
+      Logged in as <strong id="username"></strong> &mdash;
+      <a href="/dashboard.html">Dashboard</a>
+    </div>
+  </div>
+  <script>
+    (async () => {
+      try {
+        const res = await fetch('/api/me');
+        if (res.ok) {
+          const data = await res.json();
+          document.getElementById('username').textContent = data.user.username;
+          document.getElementById('status').classList.add('active');
+        }
+      } catch {}
+    })();
+  </script>
+</body>
+</html>

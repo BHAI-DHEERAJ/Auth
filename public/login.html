@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Auth System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0f0f13;
+      color: #e4e4e7;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 400px;
+    }
+    h2 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+    .subtitle { color: #a1a1aa; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .field { margin-bottom: 1rem; }
+    label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.35rem; color: #a1a1aa; }
+    input {
+      width: 100%;
+      padding: 0.7rem 0.85rem;
+      background: #0f0f13;
+      border: 1px solid #3f3f46;
+      border-radius: 6px;
+      color: #e4e4e7;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus { border-color: #818cf8; }
+    .btn {
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      background: #818cf8;
+      color: #fff;
+      margin-top: 0.5rem;
+    }
+    .btn:hover { background: #6d78f0; }
+    .error {
+      color: #f87171;
+      font-size: 0.85rem;
+      margin-top: 0.75rem;
+      display: none;
+    }
+    .error.show { display: block; }
+    .link { text-align: center; margin-top: 1rem; font-size: 0.9rem; color: #a1a1aa; }
+    .link a { color: #818cf8; text-decoration: none; }
+    .link a:hover { text-decoration: underline; }
+    .back { position: fixed; top: 1.5rem; left: 1.5rem; }
+    .back a { color: #a1a1aa; text-decoration: none; font-size: 0.9rem; }
+    .back a:hover { color: #e4e4e7; }
+  </style>
+</head>
+<body>
+  <div class="back"><a href="/">&larr; Home</a></div>
+  <div class="card">
+    <h2>Sign In</h2>
+    <p class="subtitle">Welcome back</p>
+    <form id="loginForm">
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn">Sign In</button>
+      <div class="error" id="error"></div>
+    </form>
+    <div class="link">Don't have an account? <a href="/register.html">Register</a></div>
+  </div>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errorEl = document.getElementById('error');
+      errorEl.classList.remove('show');
+      const btn = e.target.querySelector('.btn');
+      btn.disabled = true; btn.textContent = 'Signing in...';
+
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: document.getElementById('username').value,
+          password: document.getElementById('password').value,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        errorEl.textContent = data.error;
+        errorEl.classList.add('show');
+        btn.disabled = false; btn.textContent = 'Sign In';
+        return;
+      }
+      window.location.href = '/dashboard.html';
+    });
+  </script>
+</body>
+</html>
